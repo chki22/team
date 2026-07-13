@@ -969,6 +969,71 @@ body.light-theme .hero-overlay {
       }
     }
 
+
+    /* Game Style Test */
+    .style-test-box {
+      padding: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .style-question {
+      margin-bottom: 26px;
+      padding: 22px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.025);
+    }
+    .style-question h3 {
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+    }
+    .style-options {
+      display: grid;
+      gap: 10px;
+    }
+    .style-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      transition: .25s ease;
+      color: var(--muted);
+    }
+    .style-option:hover {
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+      color: var(--text);
+    }
+    .style-option input {
+      accent-color: var(--purple);
+    }
+    .style-submit {
+      margin-top: 8px;
+    }
+    .style-result {
+      margin-top: 28px;
+      min-height: 120px;
+      padding: 26px;
+      border-radius: 18px;
+      border: 1px dashed rgba(101,215,255,.3);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+    }
+    .style-result h3 {
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    @media(max-width:760px){
+      .style-test-box { padding: 22px; }
+    }
+
 </style>
 </head>
 <body>
@@ -1097,6 +1162,53 @@ body.light-theme .hero-overlay {
           <button class="btn btn-primary" type="button" id="recommendBtn">게임 추천받기</button>
         </div>
         <div class="recommend-result" id="recommendResult">아직 선택된 게임이 없습니다.</div>
+      </div>
+    </section>
+
+
+    <section class="section" id="style-test">
+      <div class="section-head reveal">
+        <p class="eyebrow">Find Your Style</p>
+        <h2>나의 게임 플레이 스타일 테스트</h2>
+        <p>몇 가지 질문으로 내가 어떤 방식으로 게임 세계를 여행하는 플레이어인지 알아보세요.</p>
+      </div>
+
+      <div class="style-test-box reveal">
+        <div class="style-question">
+          <h3>1. 새로운 게임을 시작하면 가장 먼저 하는 행동은?</h3>
+          <div class="style-options">
+            <label class="style-option"><input type="radio" name="q1" value="explorer"> 새로운 지역을 돌아다니며 탐험한다</label>
+            <label class="style-option"><input type="radio" name="q1" value="story"> 스토리와 캐릭터 관계를 확인한다</label>
+            <label class="style-option"><input type="radio" name="q1" value="action"> 전투 시스템을 먼저 익힌다</label>
+            <label class="style-option"><input type="radio" name="q1" value="collector"> 마음에 드는 캐릭터를 모은다</label>
+          </div>
+        </div>
+
+        <div class="style-question">
+          <h3>2. 게임에서 가장 중요하게 생각하는 요소는?</h3>
+          <div class="style-options">
+            <label class="style-option"><input type="radio" name="q2" value="explorer"> 새로운 세계와 분위기</label>
+            <label class="style-option"><input type="radio" name="q2" value="story"> 깊은 이야기와 감정선</label>
+            <label class="style-option"><input type="radio" name="q2" value="action"> 손맛 있는 전투</label>
+            <label class="style-option"><input type="radio" name="q2" value="collector"> 좋아하는 캐릭터 수집</label>
+          </div>
+        </div>
+
+        <div class="style-question">
+          <h3>3. 가장 기억에 남는 게임 경험은?</h3>
+          <div class="style-options">
+            <label class="style-option"><input type="radio" name="q3" value="explorer"> 아름다운 장소를 발견했을 때</label>
+            <label class="style-option"><input type="radio" name="q3" value="story"> 감동적인 이야기를 봤을 때</label>
+            <label class="style-option"><input type="radio" name="q3" value="action"> 강한 적을 공략했을 때</label>
+            <label class="style-option"><input type="radio" name="q3" value="collector"> 좋아하는 캐릭터와 성장했을 때</label>
+          </div>
+        </div>
+
+        <button class="btn btn-primary style-submit" id="styleTestBtn" type="button">내 플레이 스타일 확인하기</button>
+
+        <div class="style-result" id="styleResult">
+          선택 후 결과가 표시됩니다.
+        </div>
       </div>
     </section>
 
@@ -1496,7 +1608,42 @@ body.light-theme .hero-overlay {
 
   
         // Added game: Zenless Zone Zero
-        </script>
+        
+
+    // Game Style Test
+    document.querySelector("#styleTestBtn")?.addEventListener("click", () => {
+      const selected = [...document.querySelectorAll("#style-test input:checked")];
+
+      if (selected.length < 3) {
+        $("#styleResult").innerHTML = "모든 질문에 답해주세요.";
+        return;
+      }
+
+      const score = {};
+      selected.forEach(item => {
+        score[item.value] = (score[item.value] || 0) + 1;
+      });
+
+      const result = Object.keys(score).sort((a,b)=>score[b]-score[a])[0];
+
+      const resultData = {
+        story: ["🌌 Story Explorer", "세계관과 캐릭터의 이야기에 오래 머무는 플레이어입니다.", "붕괴: 스타레일 · 원신 · 미해결사건부"],
+        action: ["⚔️ Action Seeker", "전투와 조작의 재미를 중요하게 생각하는 플레이어입니다.", "명조: 워더링 웨이브 · 젠레스 존 제로"],
+        collector: ["💎 Collector", "좋아하는 캐릭터와 함께 성장하는 경험을 좋아합니다.", "러브앤딥스페이스 · 주술회전 팬텀 퍼레이드"],
+        explorer: ["🌍 Explorer", "새로운 세계를 발견하고 탐험하는 것을 좋아합니다.", "원신 · 이환 · 신월동행"]
+      };
+
+      const data = resultData[result];
+      $("#styleResult").innerHTML = `
+        <div>
+          <h3>${data[0]}</h3>
+          <p>${data[1]}</p>
+          <p style="margin-top:10px;color:var(--text)">추천 게임: ${data[2]}</p>
+        </div>
+      `;
+    });
+
+</script>
         
 </body>
 </html>
